@@ -37,7 +37,7 @@ const MicroBlinkId = () => {
             }
             
             // 2. Create instance of SDK load settings with your license key
-            const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings(process.env.NEXT_PUBLIC_NGROK_LICENSE_KEY||"");
+            const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings(process.env.NEXT_PUBLIC_LICENSE_KEY||"");
 
             // [OPTIONAL] Change default settings
             // Show or hide hello message in browser console when WASM is successfully loaded

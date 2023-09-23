@@ -5,8 +5,6 @@ import {
     defineCustomElements
 } from '@microblink/blinkid-in-browser-sdk/ui/loader';
 // Import typings for UI component
-import "@microblink/blinkid-in-browser-sdk/ui";
-import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
 import { SDKError, EventScanError, EventScanSuccess } from "@microblink/blinkid-in-browser-sdk/ui/dist/types/utils/data-structures";
 
 declare global {

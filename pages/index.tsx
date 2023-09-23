@@ -18,10 +18,10 @@ export default function Home() {
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
           {/* implementation without UI */}
-          <MicroBlinkId />
+          {/* <MicroBlinkId /> */}
 
           {/* implementation with UI */}
-          {/* <MicroBlinkUI /> */}
+          <MicroBlinkUI />
       </main>
     </>
   )
