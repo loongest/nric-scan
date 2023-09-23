@@ -2,7 +2,6 @@
 import React from 'react';
 import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
 
-const licenseKey = "sRwCAAlsb2NhbGhvc3QGbGV5SkRjbVZoZEdWa1QyNGlPakUyT1RRMk56QTJPVGMwTWpZc0lrTnlaV0YwWldSR2IzSWlPaUkzWXpabE5ETm1aaTFrTjJabExUUXhaR1F0WVRKbE55MW1abUV4WlRoa016SmxPRE1pZlE9PRHgYYNrGlAwC9RIBS+c6O7W8BSKXF8yGqfTh20om68U+98pbVaAlo46X33B1EzM1+JNdlDnyzAXCurDVzpxu37EMlL360Tksp6fBuPfHi0ANSJKLoj09fnnQXuHpe0iUvrf7XkKBep78tAB8SeS1voUxzvoJmOiRaUsiQ==";
 
 
 const MicroBlinkId = () => {
@@ -38,32 +37,37 @@ const MicroBlinkId = () => {
             }
             
             // 2. Create instance of SDK load settings with your license key
-            const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings(licenseKey);
+            const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings(process.env.NEXT_PUBLIC_NGROK_LICENSE_KEY||"");
 
             // [OPTIONAL] Change default settings
             // Show or hide hello message in browser console when WASM is successfully loaded
-            loadSettings.allowHelloMessage = true;
+           loadSettings.allowHelloMessage = true;
             // In order to provide better UX, display progress bar while loading the SDK
-            loadSettings.loadProgressCallback = (progress) => (progressRef.current!.value = progress);
+           loadSettings.loadProgressCallback = (progress) => (progressRef.current!.value = progress);
             
             // Set relative or absolute location of the engine, i.e. WASM and support JS files
             
-            loadSettings.engineLocation = publicfolder;
+           loadSettings.engineLocation = publicfolder;
             // loadSettings.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@6.2.0/resources/";
             
             // Set absolute location of the worker file
             // IMPORTANT: function getWorkerLocation is a workaround for the CodePen since native Web Workers are not supported
 
-            loadSettings.workerLocation = await getWorkerLocation(publicfolder + "BlinkIDWasmSDK.worker.min.js");
+           loadSettings.workerLocation = await getWorkerLocation(publicfolder + "BlinkIDWasmSDK.worker.min.js");
             // loadSettings.workerLocation = await getWorkerLocation('https://unpkg.com/@microblink/blinkid-in-browser-sdk@6.2.0/resources/BlinkIDWasmSDK.worker.min.js');
       
+
+
+            
+
+
             // 3. Load SDK
             BlinkIDSDK.loadWasmModule(loadSettings).then(
-                (sdk) => {
+                (wasmSDK: BlinkIDSDK.WasmSDK) => {
                     if ( videoRef.current ) {
                         videoRef.current.addEventListener("click", (ev) => {
                             ev.preventDefault();
-                            startScan(sdk);
+                            startScan(wasmSDK);
                         });
                     } else {
                         setMessage("VideoRef not loeaded");
