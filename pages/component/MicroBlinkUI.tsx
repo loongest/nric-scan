@@ -5,7 +5,8 @@ import {
     defineCustomElements
 } from '@microblink/blinkid-in-browser-sdk/ui/loader';
 // Import typings for UI component
-import { SDKError, EventScanError, EventScanSuccess } from "@microblink/blinkid-in-browser-sdk/ui/dist/types/utils/data-structures";
+import { EventReady, SDKError, EventScanError, EventScanSuccess } from "@microblink/blinkid-in-browser-sdk/ui/dist/types/utils/data-structures";
+
 
 declare global {
   namespace JSX {
@@ -20,33 +21,32 @@ const MicroBlinkUI = () => {
     const [message, setMessage] = React.useState<string>("");
     
     React.useEffect(() => {
+        const publicfolder = window.location.origin + "/resources/";
         applyPolyfills().then(() => {
-            defineCustomElements().then(() => {
+            defineCustomElements().then( async() => {
               // Reference to the `<blinkid-in-browser>` custom web component
                 const blinkIdRef = document.querySelector("blinkid-in-browser") as HTMLBlinkidInBrowserElement;
                 const publicFolder = window.location.origin + "/resources/";
                 
                 if ( blinkIdRef ) { 
                     const blinkId = blinkIdRef;
-                
+
                     blinkId.licenseKey = process.env.NEXT_PUBLIC_LICENSE_KEY||"";
                     blinkId.engineLocation = publicFolder;
                     blinkId.workerLocation = publicFolder + "BlinkIDWasmSDK.worker.min.js";
                     blinkId.recognizers = ["BlinkIdSingleSideRecognizer"];
+
+                    blinkId.addEventListener('ready', (ev: CustomEventInit<EventReady>) => {
+                        setMessage("ready " + ev.detail);
+                    });
                     blinkId.addEventListener("fatalError", (ev: CustomEventInit<SDKError>) => {
-                        const fatalError = ev.detail;
-                        setMessage("Could not load UI component " + fatalError);
-                        console.log("Could not load UI component ", fatalError);
+                        setMessage("FatalError: " + ev.detail + JSON.stringify(ev, null, 2));
                     });
                     blinkId.addEventListener("scanError", (ev: CustomEventInit<EventScanError>) => {
-                        const scanError = ev.detail;
-                        setMessage("Could not scan a document " + scanError);
-                        console.log("Could not scan a document ", scanError);
+                        setMessage("ScanError " + ev.detail);
                     });
                     blinkId.addEventListener("scanSuccess", (ev: CustomEventInit<EventScanSuccess>) => {
-                        const scanResults = ev.detail;
-                        setMessage("Scan results " + scanResults);
-                        console.log("Scan results ", scanResults);
+                        setMessage("ScanSuccess " + ev.detail);
                     });
                 } else {
                     setMessage("Could not find UI component!");

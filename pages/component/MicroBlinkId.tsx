@@ -2,8 +2,6 @@
 import React from 'react';
 import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
 
-
-
 const MicroBlinkId = () => {
     const [message, setMessage] = React.useState<string>("Loading...");
     // Initialize the useRef with null
@@ -56,10 +54,6 @@ const MicroBlinkId = () => {
            loadSettings.workerLocation = await getWorkerLocation(publicfolder + "BlinkIDWasmSDK.worker.min.js");
             // loadSettings.workerLocation = await getWorkerLocation('https://unpkg.com/@microblink/blinkid-in-browser-sdk@6.2.0/resources/BlinkIDWasmSDK.worker.min.js');
       
-
-
-            
-
 
             // 3. Load SDK
             BlinkIDSDK.loadWasmModule(loadSettings).then(
